@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+		config.vm.define "xilito" do |xilito|
+			xilito.vm.box = "ubuntu/bionic64"
+			xilito.vm.network "public_network", bridged: "Realtek Gaming GBE Family Controller", ip: "192.168.1.206"
+			xilito.vm.provision "shell", inline: <<-SHELL
+						sudo hostnamectl set-hostname xilito && \						
+						sudo apt update && sudo apt upgrade && sudo apt install epel nfs-kernel-server htop glances && \
+						sudo systemctl enable nfs-kernel-server && sudo systemctl restart nfs-kernel-server && \
+						sudo sudo ufw allow from 192.168.1.0/24 to any port nfs										
+						SHELL
+					config.vm.provider "virtualbox" do |v|
+						v.memory = "512"
+						v.cpus = "2"
+						v.name = "xilito"
+					end
+			end
+end
