@@ -1,6 +1,17 @@
 #!/bin/bash
-sudo ifconfig eth1 192.168.1.207 netmask 255.255.255.0 up && sudo route add default gw 192.168.1.1
-sudo hostname -b nexus 						
+sudo cat > /etc/sysconfig/network-scripts/ifcfg-eth1 << EOF
+DEVICE="eth0"
+BOOTPROTO="static"
+ONBOOT="yes"
+TYPE="Ethernet"
+PERSISTENT_DHCLIENT="no"
+IPADDR=192.168.1.207
+NETMASK=255.255.255.0
+GATEWAY=192.168.1.1
+DNS1=1.1.1.1
+EOF
+sudo /etc/init.d/network restart
+sudo echo "nexus" > /etc/hostname 						
 sudo yum update -y 
 sudo yum install -y epel-release ; yum update -y 
 sudo yum install -y wget perl iotop net-tools htop nfs-utils git vim wget net-tools java-1.8.0-openjdk.x86_64 
@@ -47,3 +58,4 @@ WantedBy=multi-user.target
 EOF
 sudo systemctl daemon-reload && sudo systemctl enable nexus.service firewalld && systemctl start nexus.service firewalld
 sudo firewall-cmd --zone=public --permanent --add-port=8081/tcp && sudo firewall-cmd --reload 
+sudo reboot

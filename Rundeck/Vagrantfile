@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
 			rundeck.vm.box = "centos/7"
 			rundeck.vm.network "public_network", bridged: "Realtek Gaming GBE Family Controller", ip: "192.168.1.204"
 			rundeck.vm.provision "shell", inline: <<-SHELL
-						sudo hostname -b rundeck && \						
+						sudo echo "rundeck" > /etc/hostname && \						
 						sudo yum update -y && \
 						sudo yum install -y epel-release ; yum update -y && \
 						sudo yum install -y wget perl iotop net-tools htop nfs-utils git java-1.8.0 && \
